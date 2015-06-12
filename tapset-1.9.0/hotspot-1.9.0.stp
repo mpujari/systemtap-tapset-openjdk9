@@ -1,0 +1,43 @@
+
+/* hotspot.class_loaded
+   Triggers when a class is loaded.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class and is_shared if the
+   class was loaded from a shared archive.
+   
+   For more information please refer to
+   hotspot/src/share/vm/services/classLoadingService.cpp
+ */
+probe hotspot.class_loaded =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("class__loaded"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("class__loaded")
+{
+  name = "class_loaded";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  is_shared = $arg4;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,is_shared=%d)",
+                     name, class, classloader_id, is_shared);
+}
+
+/* hotspot.class_unloaded
+   Triggers when a class is unloaded.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   is_shared will be false as classes that can be unloaded 
+   must be non-shared (refer classLoadingService.cpp 
+
+   For more information please refer to
+   hotspot/src/share/vm/services/classLoadingService.cpp
+ */
+probe hotspot.class_unloaded =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("class__unloaded"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("class__unloaded")
+{
+  name = "class_unloaded";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  is_shared = $arg4;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,is_shared=%d)",
+                     name, class, classloader_id, is_shared);
+}
