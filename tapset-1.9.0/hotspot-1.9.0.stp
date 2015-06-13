@@ -25,7 +25,7 @@ probe hotspot.class_loaded =
    name to the loaded class name, classloader_id to the id
    of the classloader that loaded this class 
    is_shared will be false as classes that can be unloaded 
-   must be non-shared (refer classLoadingService.cpp 
+   must be non-shared (refer classLoadingService.cpp)
 
    For more information please refer to
    hotspot/src/share/vm/services/classLoadingService.cpp
@@ -41,3 +41,186 @@ probe hotspot.class_unloaded =
   probestr = sprintf("%s(class='%s',classloader_id=0x%x,is_shared=%d)",
                      name, class, classloader_id, is_shared);
 }
+
+/* hotspot.class_initialization_required
+   Triggers when a class initialization is required.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_required =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__required"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__required")
+{
+  name = "class_initialization_required";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d)",
+                     name, class, classloader_id, thread_type);
+}
+
+/* hotspot.class_initialization_recursive
+   Triggers when a class initialization is recursive.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_recursive =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__recursive"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__recursive")
+{
+  name = "class_initialization_recursive";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_concurrent
+   // TODO write document about probe
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_concurrent =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__concurrent"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__concurrent")
+{
+  name = "class_initialization_concurrent";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_erroneous
+   Triggers when class could not be initialized and is in error state.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_erroneous =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__erroneous"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__erroneous")
+{
+  name = "class_initialization_erroneous";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_super_failed
+   Triggers when class could not be initialized because of super failed.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_super_failed =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__super__failed"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__super__failed")
+{
+  name = "class_initialization_super_failed";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_clinit
+   Triggers when class is initialized.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_clinit =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__clinit"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__clinit")
+{
+  name = "class_initialization_clinit";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_error
+   Triggers when class initialization has errors
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_error =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__error"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__error")
+{
+  name = "class_initialization_error";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_end
+   Triggers when class initialization ends
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_end =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__end"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__end")
+{
+  name = "class_initialization_end";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
