@@ -224,3 +224,151 @@ probe hotspot.class_initialization_end =
                      name, class, classloader_id, thread_type, wait);
 }
 
+/* hotspot.vm_init_begin
+   Triggers at the beginning of the virtual machine initialization.
+   Has no arguments
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/thread.cpp
+ */
+probe hotspot.vm_init_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__init__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vm__init__begin")
+{
+  name = "vm_init_begin";
+  probestr = name;
+}
+
+/* hotspot.vm_init_end
+   Triggers at the end of the virtual machine initialization.
+   Has no arguments.
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/thread.cpp
+ */
+probe hotspot.vm_init_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__init__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vm__init__end")
+{
+  name = "vm_init_end";
+  probestr = name;
+}
+
+/* hotspot.vm_shutdown
+   Triggers at the shutdown of the virtual machine.
+   Has no arguments.
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/java.cpp
+ */
+probe hotspot.vm_shutdown =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__shutdown"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vm__shutdown")
+{
+  name = "vm_shutdown";
+  probestr = name;
+}
+
+/* hotspot.vmops_request
+   Triggers when vm operation is requested.
+   opname name of the operation, evaluation_mode
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/vmThread.cpp
+ */
+probe hotspot.vm_shutdown =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vmops__request"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vmops__request")
+{
+  name = "vmops_request"
+  opname = user_string_n($arg1, $arg2);
+  evaluation_mode = $arg3;
+  probestr = sprintf("%s(opname='%s',evalution_mode=%d)",
+                     name, opname, evalution_mode);
+}
+
+/* hotspot.vmops_request
+   Triggers when vm operation is requested.
+   opname name of the operation, evaluation_mode
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/vmThread.cpp
+ */
+probe hotspot.vmops_request =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vmops__request"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vmops__request")
+{
+  name = "vmops_request"
+  opname = user_string_n($arg1, $arg2);
+  evaluation_mode = $arg3;
+  probestr = sprintf("%s(opname='%s',evalution_mode=%d)",
+                     name, opname, evaluation_mode);
+}
+
+/* hotspot.vmops_begin
+   Triggers when vm operation begins.
+   opname name of the operation, evaluation_mode
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/vmThread.cpp
+ */
+probe hotspot.vmops_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vmops__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vmops__begin")
+{
+  name = "vmops_begin"
+  opname = user_string_n($arg1, $arg2);
+  evaluation_mode = $arg3;
+  probestr = sprintf("%s(opname='%s',evalution_mode=%d)",
+                     name, opname, evaluation_mode);
+}
+
+/* hotspot.vmops_end
+   Triggers when vm operation ends.
+   opname name of the operation, evaluation_mode
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/vmThread.cpp
+ */
+probe hotspot.vmops_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vmops__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vmops__end")
+{
+  name = "vmops_end"
+  opname = user_string_n($arg1, $arg2);
+  evaluation_mode = $arg3;
+  probestr = sprintf("%s(opname='%s',evalution_mode=%d)",
+                     name, opname, evaluation_mode);
+}
+
+/* hotspot.gc_begin
+   Triggers for GC begins
+   gc_full GC is full or not
+   
+   For more information please refer to
+   hotspot/src/share/vm/gc_implementation/shared/vmGCOperations.cpp
+ */
+probe hotspot.gc_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__begin")
+{
+  name = "gc_begin"
+  gc_full = $arg1;
+  probestr = sprintf("%s(gc_full=%d)", gc_full);
+}
+
+/* hotspot.gc_end
+   Triggers for GC ends
+   gc_full GC is full or not
+   
+   For more information please refer to
+   hotspot/src/share/vm/gc_implementation/shared/vmGCOperations.cpp
+ */
+probe hotspot.gc_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__end")
+{
+  name = "gc_end"
+  probestr = sprintf("%s", name);
+}
+
