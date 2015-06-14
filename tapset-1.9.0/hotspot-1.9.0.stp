@@ -1,0 +1,882 @@
+
+/* hotspot.class_loaded
+   Triggers when a class is loaded.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class and is_shared if the
+   class was loaded from a shared archive.
+   
+   For more information please refer to
+   hotspot/src/share/vm/services/classLoadingService.cpp
+ */
+probe hotspot.class_loaded =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("class__loaded"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("class__loaded")
+{
+  name = "class_loaded";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  is_shared = $arg4;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,is_shared=%d)",
+                     name, class, classloader_id, is_shared);
+}
+
+/* hotspot.class_unloaded
+   Triggers when a class is unloaded.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   is_shared will be false as classes that can be unloaded 
+   must be non-shared (refer classLoadingService.cpp)
+
+   For more information please refer to
+   hotspot/src/share/vm/services/classLoadingService.cpp
+ */
+probe hotspot.class_unloaded =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("class__unloaded"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("class__unloaded")
+{
+  name = "class_unloaded";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  is_shared = $arg4;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,is_shared=%d)",
+                     name, class, classloader_id, is_shared);
+}
+
+/* hotspot.class_initialization_required
+   Triggers when a class initialization is required.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_required =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__required"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__required")
+{
+  name = "class_initialization_required";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d)",
+                     name, class, classloader_id, thread_type);
+}
+
+/* hotspot.class_initialization_recursive
+   Triggers when a class initialization is recursive.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_recursive =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__recursive"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__recursive")
+{
+  name = "class_initialization_recursive";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_concurrent
+   // TODO write document about probe
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_concurrent =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__concurrent"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__concurrent")
+{
+  name = "class_initialization_concurrent";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_erroneous
+   Triggers when class could not be initialized and is in error state.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_erroneous =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__erroneous"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__erroneous")
+{
+  name = "class_initialization_erroneous";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_super_failed
+   Triggers when class could not be initialized because of super failed.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_super_failed =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__super__failed"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__super__failed")
+{
+  name = "class_initialization_super_failed";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_clinit
+   Triggers when class is initialized.
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_clinit =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__clinit"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__clinit")
+{
+  name = "class_initialization_clinit";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_error
+   Triggers when class initialization has errors
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_error =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__error"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__error")
+{
+  name = "class_initialization_error";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.class_initialization_end
+   Triggers when class initialization ends
+   name to the loaded class name, classloader_id to the id
+   of the classloader that loaded this class 
+   thread_type its set to -1 (ref hotspot/src/share/vm/oops/instanceKlass.cpp)
+   wait will be wait or not
+
+   For more information please refer to
+   hotspot/src/share/vm/oops/instanceKlass.cpp
+ */
+probe hotspot.class_initialization_end =
+ process("@ABS_CLIENT_LIBJVM_SO@").mark("class__initialization__end"),
+ process("@ABS_SERVER_LIBJVM_SO@").mark("class__initialization__end")
+{
+  name = "class_initialization_end";
+  class = user_string_n($arg1, $arg2);
+  classloader_id = $arg3;
+  thread_type = $arg4;
+  wait = $arg5;
+  probestr = sprintf("%s(class='%s',classloader_id=0x%x,thread_type=%d,wait=%d)",
+                     name, class, classloader_id, thread_type, wait);
+}
+
+/* hotspot.vm_init_begin
+   Triggers at the beginning of the virtual machine initialization.
+   Has no arguments
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/thread.cpp
+ */
+probe hotspot.vm_init_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__init__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vm__init__begin")
+{
+  name = "vm_init_begin";
+  probestr = name;
+}
+
+/* hotspot.vm_init_end
+   Triggers at the end of the virtual machine initialization.
+   Has no arguments.
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/thread.cpp
+ */
+probe hotspot.vm_init_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__init__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vm__init__end")
+{
+  name = "vm_init_end";
+  probestr = name;
+}
+
+/* hotspot.vm_shutdown
+   Triggers at the shutdown of the virtual machine.
+   Has no arguments.
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/java.cpp
+ */
+probe hotspot.vm_shutdown =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vm__shutdown"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vm__shutdown")
+{
+  name = "vm_shutdown";
+  probestr = name;
+}
+
+/* hotspot.vmops_request
+   Triggers when vm operation is requested.
+   opname name of the operation, evaluation_mode
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/vmThread.cpp
+ */
+probe hotspot.vm_shutdown =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vmops__request"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vmops__request")
+{
+  name = "vmops_request"
+  opname = user_string_n($arg1, $arg2);
+  evaluation_mode = $arg3;
+  probestr = sprintf("%s(opname='%s',evalution_mode=%d)",
+                     name, opname, evalution_mode);
+}
+
+/* hotspot.vmops_request
+   Triggers when vm operation is requested.
+   opname name of the operation, evaluation_mode
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/vmThread.cpp
+ */
+probe hotspot.vmops_request =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vmops__request"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vmops__request")
+{
+  name = "vmops_request"
+  opname = user_string_n($arg1, $arg2);
+  evaluation_mode = $arg3;
+  probestr = sprintf("%s(opname='%s',evalution_mode=%d)",
+                     name, opname, evaluation_mode);
+}
+
+/* hotspot.vmops_begin
+   Triggers when vm operation begins.
+   opname name of the operation, evaluation_mode
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/vmThread.cpp
+ */
+probe hotspot.vmops_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vmops__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vmops__begin")
+{
+  name = "vmops_begin"
+  opname = user_string_n($arg1, $arg2);
+  evaluation_mode = $arg3;
+  probestr = sprintf("%s(opname='%s',evalution_mode=%d)",
+                     name, opname, evaluation_mode);
+}
+
+/* hotspot.vmops_end
+   Triggers when vm operation ends.
+   opname name of the operation, evaluation_mode
+   
+   For more information please refer to
+   hotspot/src/share/vm/runtime/vmThread.cpp
+ */
+probe hotspot.vmops_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("vmops__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("vmops__end")
+{
+  name = "vmops_end"
+  opname = user_string_n($arg1, $arg2);
+  evaluation_mode = $arg3;
+  probestr = sprintf("%s(opname='%s',evalution_mode=%d)",
+                     name, opname, evaluation_mode);
+}
+
+/* hotspot.gc_begin
+   Triggers for GC begins
+   gc_full GC is full or not
+   
+   For more information please refer to
+   hotspot/src/share/vm/gc_implementation/shared/vmGCOperations.cpp
+ */
+probe hotspot.gc_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__begin")
+{
+  name = "gc_begin"
+  gc_full = $arg1;
+  probestr = sprintf("%s(gc_full=%d)", gc_full);
+}
+
+/* hotspot.gc_end
+   Triggers for GC ends
+   gc_full GC is full or not
+   
+   For more information please refer to
+   hotspot/src/share/vm/gc_implementation/shared/vmGCOperations.cpp
+ */
+probe hotspot.gc_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("gc__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("gc__end")
+{
+  name = "gc_end"
+  probestr = sprintf("%s", name);
+}
+
+/* hotspot.mem_pool_gc_begin
+   Triggers when a memory pool collection begins.
+   Sets manager to the manager name that controls this memory pool
+   (e.g. 'Copy' or 'MarkSweepCompact'), pool to the pool name (e.g.
+   'Code Cache', 'Eden Space', 'Survivor Space', 'Tenured Gen', or
+   'Perm Gen'), initial to the initial byte size of the pool, used
+   to the number bytes in use, committed to the number of committed
+   pages and max to the maximum size of the pool.
+
+   For more information please refer to
+   hotspot/src/share/vm/services/memoryManager.cpp
+ */
+probe hotspot.mem_pool_gc_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("mem__pool__gc__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("mem__pool__gc__begin")
+{
+  name = "mem_pool_gc_begin";
+  manager = user_string_n($arg1, $arg2);
+  pool = user_string_n($arg3, $arg4);
+  initial = $arg5;
+  used = $arg6;
+  committed = $arg7;
+  max = $arg8;
+  probestr = sprintf("%s(manager='%s',pool='%s',initial=%d,used=%d,committed=%d,max=%d)",
+                     name, manager, pool, initial, used, committed, max);
+}
+
+/* hotspot.mem_pool_gc_end
+   Triggers when a memory pool collection ends.
+   Sets manager to the manager name that controls this memory pool
+   (e.g. 'Copy' or 'MarkSweepCompact'), pool to the pool name (e.g.
+   'Code Cache', 'Eden Space', 'Survivor Space', 'Tenured Gen', or
+   'Perm Gen'), initial to the initial byte size of the pool, used
+   to the number bytes in use, committed to the number of committed
+   pages and max to the maximum size of the pool.
+
+   For more information please refer to
+   hotspot/src/share/vm/services/memoryManager.cpp
+ */
+probe hotspot.mem_pool_gc_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("mem__pool__gc__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("mem__pool__gc__end")
+{
+  name = "mem_pool_gc_end";
+  manager = user_string_n($arg1, $arg2);
+  pool = user_string_n($arg3, $arg4);
+  initial = $arg5;
+  used = $arg6;
+  committed = $arg7;
+  max = $arg8;
+  probestr = sprintf("%s(manager='%s',pool='%s',initial=%d,used=%d,committed=%d,max=%d)",
+                     name, manager, pool, initial, used, committed, max);
+}
+
+/* hotspot.thread_start
+   Triggers when a java thread is started.
+   Sets name to the name of the thread, id to the java thread id,
+   native_id to the os thread number and is_daemon if the thread
+   is a daemon thread.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/thread.cpp
+ */
+probe hotspot.thread_start =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__start"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__start")
+{
+  name = "thread_start";
+  thread_name = user_string_n($arg1, $arg2);
+  id = $arg3;
+  native_id = $arg4;
+  is_daemon = $arg5;
+  probestr = sprintf("%s(thread_name='%s',id=%d,native_id=%d,is_daemon=%d)",
+                     name, thread_name, id, native_id, is_daemon);
+}
+
+/* hotspot.thread_stop
+   Triggers when a java thread stops.
+   Sets name to the name of the thread, id to the java thread id,
+   native_id to the os thread number and is_daemon if the thread
+   is a daemon thread.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/thread.cpp
+ */
+probe hotspot.thread_stop =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__stop"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__stop")
+{
+  name = "thread_stop";
+  thread_name = user_string_n($arg1, $arg2);
+  id = $arg3;
+  native_id = $arg4;
+  is_daemon = $arg5;
+  probestr = sprintf("%s(thread_name='%s',id=%d,native_id=%d,is_daemon=%d)",
+                     name, thread_name, id, native_id, is_daemon);
+}
+
+/* hotspot.thread_sleep_begin
+   Triggers when thread sleep begins.
+   sleep_millis sleep time in millis
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/jvm.cpp
+ */
+probe hotspot.thread_sleep_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__sleep__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__sleep__begin")
+{
+  name = "thread_sleep_begin";
+  sleep_millis = $arg1;
+  probestr = sprintf("%s(sleep_millis='%d')", name, sleep_millis);
+}
+
+/* hotspot.thread_sleep_end
+   Triggers when thread sleep ends.
+   Interrupted 1 means sleep was interuppted
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/jvm.cpp
+ */
+probe hotspot.thread_sleep_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__sleep__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__sleep__end")
+{
+  name = "thread_sleep_end";
+  interrupted = $arg1;
+  probestr = sprintf("%s(interrupted='%d')", name, interrupted);
+}
+
+/* hotspot.thread_yield
+   Triggers when thread yields.
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/jvm.cpp
+ */
+probe hotspot.thread_yield =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__yield"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__yield")
+{
+  name = "thread_yield";
+  probestr = sprintf("%s", name);
+}
+
+/* hotspot.thread_park_begin
+   Triggers thread is parked
+   Parker, is_absolute, time
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/unsafe.cpp
+ */
+probe hotspot.thread_park_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__park__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__park__begin")
+{
+  name = "thread_park_begin";
+  parker = $arg1;
+  is_absolute = $arg2;
+  time = $arg3;
+  probestr = sprintf("%s(parker='%d',is_absoulte=%d,time=%d)",
+                     name, parker, is_absolute, time);
+}
+
+/* hotspot.thread_park_end
+   Triggers when park is end
+   Parker
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/unsafe.cpp
+ */
+probe hotspot.thread_park_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__park__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__park__end")
+{
+  name = "thread_park_end";
+  parker = $arg1;
+  probestr = sprintf("%s(parker='%d')", name, parker);
+}
+
+/* hotspot.thread_unpark
+   Triggers parker is unparked
+   Parker
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/unsafe.cpp
+ */
+probe hotspot.thread_unpark =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__unpark"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__unpark")
+{
+  name = "thread_unpark";
+  parker = $arg1;
+  probestr = sprintf("%s(parker='%d')", name, parker);
+}
+
+/* hotspot.method_compile_begin
+   Triggers when a method is being compiled.
+   Sets compiler to the name of the compiler,
+   class to the name of the class, method to the name of the method,
+   and sig to the signature string of the method.
+
+   For more information please refer to
+   hotspot/src/share/vm/compiler/compileBroker.cpp
+*/
+probe hotspot.method_compile_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("method__compile__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("method__compile__begin")
+{
+  name = "method_compile_begin";
+  compiler = user_string_n($arg1, $arg2);
+  class = user_string_n($arg3, $arg4);
+  method = user_string_n($arg5, $arg6);
+  sig = user_string_n($arg7, $arg8);
+  probestr = name . "(compiler='" . compiler . "',class='" . class
+           . "',method='" . method . "',sig='" . sig . "')";
+}
+
+/* hotspot.method_compile_end
+   Triggers when a method has been compiled.
+   Sets compiler to the name of the compiler
+   class to the name of the class, method to the name of the method,
+   and sig to the signature string of the method.
+
+   For more information please refer to
+   hotspot/src/share/vm/compiler/compileBroker.cpp
+*/
+probe hotspot.method_compile_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("method__compile__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("method__compile__end")
+{
+  name = "method_compile_end";
+  compiler = user_string_n($arg1, $arg2);
+  class = user_string_n($arg3, $arg4);
+  method = user_string_n($arg5, $arg6);
+  sig = user_string_n($arg7, $arg8);
+  probestr = name . "(compiler='" . compiler . "',class='" . class
+           . "',method='" . method . "',sig='" . sig . "')";
+}
+
+/* hotspot.compiled_method_load
+   Triggers when a compiled method is loaded.
+   Sets class to the name of the class, method to the name of the
+   method, sig to the signature string of the method, code to the
+   address where the code is loaded and size to the number of bytes of
+   code.
+
+   For more information please refer to
+   hotspot/src/share/vm/code/nmethod.cpp
+*/
+probe hotspot.compiled_method_load =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("compiled__method__load"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("compiled__method__load")
+{
+  name = "compiled_method_load";
+  class = user_string_n($arg1, $arg2);
+  method = user_string_n($arg3, $arg4);
+  sig = user_string_n($arg5, $arg6);
+  code = $arg7;
+  size = $arg8;
+  probestr = sprintf("%s(class='%s',method='%s',sig='%s',code=0x%x,size=%d)",
+                     name, class, method, sig, code, size);
+}
+
+/* hotspot.compiled_method_unload
+   Triggers when a compiled method is unloaded.
+   Sets class to the name of the class, method to the name of the
+   method, sig to the signature string of the method.
+
+   For more information please refer to
+   hotspot/src/share/vm/code/nmethod.cpp
+*/
+probe hotspot.compiled_method_unload =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("compiled__method__unload"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("compiled__method__unload")
+{
+  name = "compiled_method_unload";
+  class = user_string_n($arg1, $arg2);
+  method = user_string_n($arg3, $arg4);
+  sig = user_string_n($arg5, $arg6);
+  probestr = sprintf("%s(class='%s',method='%s',sig='%s')",
+                     name, class, method, sig);
+}
+
+/* hotspot.monitor_contended_enter (extended probe)
+   Triggers when a thread tries to acquire a monitor (syncronized block)
+   which is currently held by another thread (that other thread will
+   exit the monitor triggering hotspot.monitor_contended_exit at a
+   later time).
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/objectMonitor.cpp
+ */
+probe hotspot.monitor_contended_enter =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__contended__enter"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__contended__enter")
+{
+  name = "monitor_contended_enter";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* hotspot.monitor_contended_entered (extended probe)
+   Triggers when a thread acquires a contended monotor (after
+   hotspot.monitor_contended_enter has been triggered on this thread,
+   and the other thread triggered a hotspot.monitor_contended_exit).
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/objectMonitor.cpp
+ */
+probe hotspot.monitor_contended_entered =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__contended__entered"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__contended__entered")
+{
+  name = "monitor_contended_entered";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* hotspot.monitor_contended_exit (extended probe)
+   Triggers when a thread tries to exit a monitor (synchronized block)
+   that another thread wants to enter (the other thread has triggered
+   hotspot.monitor_contended_enter).
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/objectMonitor.cpp
+ */
+probe hotspot.monitor_contended_exit =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__contended__exit"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__contended__exit")
+{
+  name = "monitor_contended_exit";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* hotspot.monitor_wait (extended probe)
+   Triggers when a thread enters Object.wait().
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor, class to the class name of the object and
+   timeout to the number of ms given (or zero for waiting indefinitely).
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/synchronizer.cpp
+ */
+probe hotspot.monitor_wait =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__wait"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__wait")
+{
+  name = "monitor_wait";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  timeout = $arg5;
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s',timeout=%d)",
+                     name, thread_id, id, class, timeout);
+}
+
+/* hotspot.monitor_waited (extended probe)
+   Triggers when a thread exits Object.wait().
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/synchronizer.cpp
+ */
+probe hotspot.monitor_waited =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__waited"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__waited")
+{
+  name = "monitor_waited";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* hotspot.monitor_notify (extended probe)
+   Triggers when a thread calls Object.notify().
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/synchronizer.cpp
+ */
+probe hotspot.monitor_notify =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__notify"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__notify")
+{
+  name = "monitor_notify";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* hotspot.monitor_notifyAll (extended probe)
+   Triggers when a thread calls Object.notifyAll().
+   Sets thread_id to the current java thread, id to the unique id
+   for this monitor and class to the class name of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/synchronizer.cpp
+ */
+probe hotspot.monitor_notifyAll =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("monitor__notifyAll"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("monitor__notifyAll")
+{
+  name = "monitor_notifyAll";
+  thread_id = $arg1;
+  id = $arg2;
+  class = user_string_n($arg3, $arg4);
+  probestr = sprintf("%s(thread_id=%d,id=0x%x,class='%s')",
+                     name, thread_id, id, class);
+}
+
+/* hotspot.object_alloc (extended probe)
+   Triggers whenever an object is allocated.
+   Sets thread_id to the current thread id, class to the class name
+   of the object allocated, and size to the size of the object.
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/sharedRuntime.cpp
+ */
+probe hotspot.object_alloc =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("object__alloc"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("object__alloc")
+{
+  name = "object_alloc";
+  thread_id = $arg1;
+  class = user_string_n($arg2, $arg3);
+  // NOTE: for 32 bit HeapWordSize 4 and for 64 its 8
+  HeapWordSize = 8;
+  size = $arg4 * HeapWordSize;
+  probestr = sprintf("%s(thread_id=%d,class='%s',size=0x%x)",
+                     name, thread_id, class, size);
+}
+
+/* hotspot.method_entry (extended probe)
+   Triggers when a method is entered.
+   Sets thread_id to the current java thread id, class to the name of
+   the class, method to the name of the method, and sig to the
+   signature string of the method.
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/sharedRuntime.cpp
+*/
+probe hotspot.method_entry =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("method__entry"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("method__entry")
+{
+  name = "method_entry";
+  thread_id = $arg1;
+  class = user_string_n($arg2, $arg3);
+  method = user_string_n($arg4, $arg5);
+  sig = user_string_n($arg6, $arg7);
+  probestr = sprintf("%s(thread_id=%d,class='%s',method='%s',sig='%s')",
+                     name, thread_id, class, method, sig);
+}
+
+/* hotspot.method_return (extended probe)
+   Triggers when a method returns.
+   Sets thread_id to the current java thread id, class to the name of
+   the class, method to the name of the method, and sig to the
+   signature string of the method.
+   Needs -XX:+ExtendedDTraceProbes.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/sharedRuntime.cpp
+*/
+probe hotspot.method_return =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("method__return"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("method__return")
+{
+  name = "method_return";
+  thread_id = $arg1;
+  class = user_string_n($arg2, $arg3);
+  method = user_string_n($arg4, $arg5);
+  sig = user_string_n($arg6, $arg7);
+  probestr = sprintf("%s(thread_id=%d,class='%s',method='%s',sig='%s')",
+                     name, thread_id, class, method, sig);
+}
+
