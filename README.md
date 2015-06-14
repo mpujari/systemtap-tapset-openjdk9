@@ -11,4 +11,5 @@ Directory tapset-1.8.0 contains tapset taken from http://pkgs.fedoraproject.org/
 Tapset from IceaTea7 can be found at http://icedtea.classpath.org/hg/icedtea7/file/tip/tapset
 
 Example: To run an HelloWorld program to probe monitor_** 
+
 sudo stap -I <PATH>/systemtap-tapset-openjdk9/tapset-1.9.0 -e 'probe hotspot.monitor_* {log(probestr)}' -c 'JAVA_HOME_OPENJDK_9/bin/java -XX:+ExtendedDTraceProbes HelloWorld
