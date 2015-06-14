@@ -9,3 +9,6 @@ NOTE: hotspot.object_alloc contains hardcoded value of 8 to HeapWordSize (for 64
 Directory tapset-1.8.0 contains tapset taken from http://pkgs.fedoraproject.org/repo/pkgs/java-1.8.0-openjdk/systemtap-tapset.tar.gz/94ca5a45c3cb3b85c4577d0891166007/systemtap-tapset.tar.gz.
 
 Tapset from IceaTea7 can be found at http://icedtea.classpath.org/hg/icedtea7/file/tip/tapset
+
+Example: To run an HelloWorld program to probe monitor_** 
+sudo stap -I <PATH>/systemtap-tapset-openjdk9/tapset-1.9.0 -e 'probe hotspot.monitor_* {log(probestr)}' -c 'JAVA_HOME_OPENJDK_9/bin/java -XX:+ExtendedDTraceProbes HelloWorld
