@@ -372,3 +372,198 @@ probe hotspot.gc_end =
   probestr = sprintf("%s", name);
 }
 
+/* hotspot.mem_pool_gc_begin
+   Triggers when a memory pool collection begins.
+   Sets manager to the manager name that controls this memory pool
+   (e.g. 'Copy' or 'MarkSweepCompact'), pool to the pool name (e.g.
+   'Code Cache', 'Eden Space', 'Survivor Space', 'Tenured Gen', or
+   'Perm Gen'), initial to the initial byte size of the pool, used
+   to the number bytes in use, committed to the number of committed
+   pages and max to the maximum size of the pool.
+
+   For more information please refer to
+   hotspot/src/share/vm/services/memoryManager.cpp
+ */
+probe hotspot.mem_pool_gc_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("mem__pool__gc__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("mem__pool__gc__begin")
+{
+  name = "mem_pool_gc_begin";
+  manager = user_string_n($arg1, $arg2);
+  pool = user_string_n($arg3, $arg4);
+  initial = $arg5;
+  used = $arg6;
+  committed = $arg7;
+  max = $arg8;
+  probestr = sprintf("%s(manager='%s',pool='%s',initial=%d,used=%d,committed=%d,max=%d)",
+                     name, manager, pool, initial, used, committed, max);
+}
+
+/* hotspot.mem_pool_gc_end
+   Triggers when a memory pool collection ends.
+   Sets manager to the manager name that controls this memory pool
+   (e.g. 'Copy' or 'MarkSweepCompact'), pool to the pool name (e.g.
+   'Code Cache', 'Eden Space', 'Survivor Space', 'Tenured Gen', or
+   'Perm Gen'), initial to the initial byte size of the pool, used
+   to the number bytes in use, committed to the number of committed
+   pages and max to the maximum size of the pool.
+
+   For more information please refer to
+   hotspot/src/share/vm/services/memoryManager.cpp
+ */
+probe hotspot.mem_pool_gc_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("mem__pool__gc__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("mem__pool__gc__end")
+{
+  name = "mem_pool_gc_end";
+  manager = user_string_n($arg1, $arg2);
+  pool = user_string_n($arg3, $arg4);
+  initial = $arg5;
+  used = $arg6;
+  committed = $arg7;
+  max = $arg8;
+  probestr = sprintf("%s(manager='%s',pool='%s',initial=%d,used=%d,committed=%d,max=%d)",
+                     name, manager, pool, initial, used, committed, max);
+}
+
+/* hotspot.thread_start
+   Triggers when a java thread is started.
+   Sets name to the name of the thread, id to the java thread id,
+   native_id to the os thread number and is_daemon if the thread
+   is a daemon thread.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/thread.cpp
+ */
+probe hotspot.thread_start =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__start"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__start")
+{
+  name = "thread_start";
+  thread_name = user_string_n($arg1, $arg2);
+  id = $arg3;
+  native_id = $arg4;
+  is_daemon = $arg5;
+  probestr = sprintf("%s(thread_name='%s',id=%d,native_id=%d,is_daemon=%d)",
+                     name, thread_name, id, native_id, is_daemon);
+}
+
+/* hotspot.thread_stop
+   Triggers when a java thread stops.
+   Sets name to the name of the thread, id to the java thread id,
+   native_id to the os thread number and is_daemon if the thread
+   is a daemon thread.
+
+   For more information please refer to
+   hotspot/src/share/vm/runtime/thread.cpp
+ */
+probe hotspot.thread_stop =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__stop"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__stop")
+{
+  name = "thread_stop";
+  thread_name = user_string_n($arg1, $arg2);
+  id = $arg3;
+  native_id = $arg4;
+  is_daemon = $arg5;
+  probestr = sprintf("%s(thread_name='%s',id=%d,native_id=%d,is_daemon=%d)",
+                     name, thread_name, id, native_id, is_daemon);
+}
+
+/* hotspot.thread_sleep_begin
+   Triggers when thread sleep begins.
+   sleep_millis sleep time in millis
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/jvm.cpp
+ */
+probe hotspot.thread_sleep_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__sleep__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__sleep__begin")
+{
+  name = "thread_sleep_begin";
+  sleep_millis = $arg1;
+  probestr = sprintf("%s(sleep_millis='%d')", name, sleep_millis);
+}
+
+/* hotspot.thread_sleep_end
+   Triggers when thread sleep ends.
+   Interrupted 1 means sleep was interuppted
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/jvm.cpp
+ */
+probe hotspot.thread_sleep_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__sleep__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__sleep__end")
+{
+  name = "thread_sleep_end";
+  interrupted = $arg1;
+  probestr = sprintf("%s(interrupted='%d')", name, interrupted);
+}
+
+/* hotspot.thread_yield
+   Triggers when thread yields.
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/jvm.cpp
+ */
+probe hotspot.thread_yield =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__yield"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__yield")
+{
+  name = "thread_yield";
+  probestr = sprintf("%s", name);
+}
+
+/* hotspot.thread_park_begin
+   Triggers thread is parked
+   Parker, is_absolute, time
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/unsafe.cpp
+ */
+probe hotspot.thread_park_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__park__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__park__begin")
+{
+  name = "thread_park_begin";
+  parker = $arg1;
+  is_absolute = $arg2;
+  time = $arg3;
+  probestr = sprintf("%s(parker='%d',is_absoulte=%d,time=%d)",
+                     name, parker, is_absolute, time);
+}
+
+/* hotspot.thread_park_end
+   Triggers when park is end
+   Parker
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/unsafe.cpp
+ */
+probe hotspot.thread_park_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__park__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__park__end")
+{
+  name = "thread_park_end";
+  parker = $arg1;
+  probestr = sprintf("%s(parker='%d')", name, parker);
+}
+
+/* hotspot.thread_unpark
+   Triggers parker is unparked
+   Parker
+
+   For more information please refer to
+   hotspot/src/share/vm/prims/unsafe.cpp
+ */
+probe hotspot.thread_unpark =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("thread__unpark"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("thread__unpark")
+{
+  name = "thread_unpark";
+  parker = $arg1;
+  probestr = sprintf("%s(parker='%d')", name, parker);
+}
+
