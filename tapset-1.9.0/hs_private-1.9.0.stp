@@ -1,0 +1,85 @@
+/* hs_private.safepoint_begin
+   Triggers when VM safepoint begins
+
+   For more information please refer to
+   hotspot/src/share/vm/services/runtimeService.cpp
+ */
+probe hs_private.safepoint_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("safepoint__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("safepoint__begin")
+{
+  name = "safepoint__begin";
+  probestr = sprintf("%s", name);
+}
+
+/* hs_private.safepoint_end
+   Triggers when VM safepoint ends
+
+   For more information please refer to
+   hotspot/src/share/vm/services/runtimeService.cpp
+ */
+probe hs_private.safepoint_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("safepoint__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("safepoint__end")
+{
+  name = "safepoint__end";
+  probestr = sprintf("%s", name);
+}
+
+/* hs_private.cms_initmark_begin
+   Triggers when VM CMS initial mark begins
+
+   For more information please refer to
+   hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/vmCMSOperations.cpp
+ */
+probe hs_private.cms_initmark_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("cms__initmark__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("cms__initmark__begin")
+{
+  name = "cms_initmark_begin";
+  probestr = sprintf("%s", name);
+}
+
+/* hs_private.cms_initmark_end
+   Triggers when VM CMS initial mark ends
+
+   For more information please refer to
+   hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/vmCMSOperations.cpp
+ */
+probe hs_private.cms_initmark_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("cms__initmark__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("cms__initmark__end")
+{
+  name = "cms_initmark_end";
+  probestr = sprintf("%s", name);
+}
+
+
+/* hs_private.cms_remark_begin
+   Triggers when VM CMS final mark begins
+
+   For more information please refer to
+   hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/vmCMSOperations.cpp
+ */
+probe hs_private.cms_remark_begin =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("cms__remark__begin"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("cms__remark__begin")
+{
+  name = "cms_remark_begin";
+  probestr = sprintf("%s", name);
+}
+
+/* hs_private.cms_remark_end
+   Triggers when VM CMS final mark ends
+
+   For more information please refer to
+   hotspot/src/share/vm/gc_implementation/concurrentMarkSweep/vmCMSOperations.cpp
+ */
+probe hs_private.cms_remark_end =
+  process("@ABS_CLIENT_LIBJVM_SO@").mark("cms__remark__end"),
+  process("@ABS_SERVER_LIBJVM_SO@").mark("cms__remark__end")
+{
+  name = "cms_remark_end";
+  probestr = sprintf("%s", name);
+}
+
