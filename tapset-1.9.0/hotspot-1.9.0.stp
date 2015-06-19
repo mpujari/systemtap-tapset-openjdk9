@@ -284,7 +284,7 @@ probe hotspot.vm_shutdown =
   opname = user_string_n($arg1, $arg2);
   evaluation_mode = $arg3;
   probestr = sprintf("%s(opname='%s',evalution_mode=%d)",
-                     name, opname, evalution_mode);
+                     name, opname, evaluation_mode);
 }
 
 /* hotspot.vmops_request
@@ -354,7 +354,7 @@ probe hotspot.gc_begin =
 {
   name = "gc_begin"
   gc_full = $arg1;
-  probestr = sprintf("%s(gc_full=%d)", gc_full);
+  probestr = sprintf("%s(gc_full=%d)", name, gc_full);
 }
 
 /* hotspot.gc_end
