@@ -828,7 +828,8 @@ probe hotspot.object_alloc =
   thread_id = $arg1;
   class = user_string_n($arg2, $arg3);
   // NOTE: for 32 bit HeapWordSize 4 and for 64 its 8
-  HeapWordSize = 8;
+  // __HEADWORD_SIZE will be replaced by shell script
+  HeapWordSize = __HEADWORD_SIZE;
   size = $arg4 * HeapWordSize;
   probestr = sprintf("%s(thread_id=%d,class='%s',size=0x%x)",
                      name, thread_id, class, size);
