@@ -5,11 +5,16 @@ Provides tapset files for OpenJDK9, the **D** script program files for posix in 
 Tapset files will be placed in tapset-1.9.0 directory, to make use of tapset we need to have OpenJDK9 build with Systemtap enabled.
 Below are the steps which needs to be done before tapset are ready to be used (in future we will be having auto scripts which will do things for us).
 
+#### Using script 
+* Run **create-tapset.sh** by passing libjvm.so path of server and client (second parameter is optional).
+* After script is run, tapset files can be found in directory **systemtap-tapset**
+
+#### Manually
 * You may want to copy tapset-1.9.0 directory in some location.
 * Replace @ABS_CLIENT_LIBJVM_SO@ and @ABS_SERVER_LIBJVM_SO@ with jre/lib/[arch]/[client|server]/libjvm.so respectively.
-* hotspot.object_alloc (which is defined in hotspot-1.9.0.stp) contains hardcoded value of 8 to HeapWordSize (for 64 bit), when its 32 bit need to be replaced with 4, please change accordingly.
+* hotspot.object_alloc (which is defined in hotspot-1.9.0.stp) contains __HEADWORD_SIZE, please replace this with 8 if its 64 bit or 4 when its 32 bit.
 
-
+#### Example
 Below is an example of probing thread_start and thread_stop for simple HelloWorld application.
 
 <pre>
@@ -30,7 +35,7 @@ thread_start(thread_name='Service Thread',id=9,native_id=14780,is_daemon=1)
 thread_stop(thread_name='Signal Dispatcher',id=4,native_id=14775,is_daemon=1)
 </pre>
 
-References
+#### References
 - [Hotspot Serviceability Doc](http://openjdk.java.net/groups/hotspot/docs/Serviceability.html)
 -  Directory tapset-1.8.0 contains tapset taken from [pkgs.fedoraproject](http://pkgs.fedoraproject.org/repo/pkgs/java-1.8.0-openjdk/systemtap-tapset.tar.gz/94ca5a45c3cb3b85c4577d0891166007/systemtap-tapset.tar.gz)
 -  Tapset from IceaTea7 can be found at [icedtea7] (http://icedtea.classpath.org/hg/icedtea7/file/tip/tapset)
