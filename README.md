@@ -9,6 +9,10 @@ Below are the steps which needs to be done before tapset are ready to be used (i
 * Run **create-tapset.sh** by passing libjvm.so path of server and client (second parameter is optional).
 * After script is run, tapset files can be found in directory **systemtap-tapset**
 
+#### Systemtap usage in OpenJDK
+OpenJDK uses user space probing using **compiled-in instrumentation**, in which embedded markers are placed in OpenJDK source code and expose selected names and there values only to systemtap scripts. This makes OpenJDK unnecessary to maintain a tapset script, and instead involves adding calls to macros from <sys/sdt.h> in source code. These calls are source compatible with dtrace on other platforms, so the same source code compiled on a system that doesn't have systemtap available, but does have a dtrace implementation will be able to discover the same probe locations. The GNU Debugger (GDB) has also been extended to allow users to set breakpoints on such probes if available.
+
+
 #### Manually
 * You may want to copy tapset-1.9.0 directory in some location.
 * Replace @ABS_CLIENT_LIBJVM_SO@ and @ABS_SERVER_LIBJVM_SO@ with jre/lib/[arch]/[client|server]/libjvm.so respectively.
